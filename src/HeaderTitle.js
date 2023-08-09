@@ -22,7 +22,8 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  border-bottom: 1px solid #2a2b32;
+  border-bottom: 2px solid #2a2b32;
+  z-index: 999;
 `;
 
 const Title = styled.h1`

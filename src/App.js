@@ -2,24 +2,49 @@ import React, { useState } from "react";
 import styled from "styled-components";
 
 import HeaderTitle from "./HeaderTitle";
+import SearchCard from "./SearchCard";
 
 function App() {
   const [showTooltip, setShowTooltip] = useState(false);
   const [isSearch, setIsSearch] = useState(false);
   const [searchContent, setSearchContent] = useState("");
+  const [searchContentArr, setSearchContentArr] = useState([]);
+
+  function addSearchContent(Content) {
+    if (Content.length !== 0) {
+      setSearchContentArr([...searchContentArr, Content]);
+    }
+  }
+
+  function toggleButton() {
+    if (searchContent.length !== 0 && !isSearch) {
+      setIsSearch(true);
+    }
+  }
 
   return (
     <Container>
       {isSearch ? <HeaderTitle /> : <Title>Meet Sanghyuk Lee!</Title>}
+      {isSearch &&
+        searchContentArr.map((content, index) => (
+          <SearchCard
+            key={index}
+            content={content}
+            marginTop={index === 0 ? "72px" : "0"}
+          />
+        ))}
       <InputContainer>
         <InputField
           placeholder="Let's find something!"
+          value={searchContent}
           onChange={(e) => setSearchContent(e.target.value)}
         />
         <SendButton
           type="button"
           onClick={() => {
-            setIsSearch(true);
+            toggleButton();
+            addSearchContent(searchContent);
+            setSearchContent("");
           }}
         >
           <SendIcon />
@@ -55,21 +80,27 @@ const Container = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
 `;
 
 const Title = styled.h1`
   color: #565869;
+  position: absolute; // 절대 위치 지정
+  top: 40%; // 상단에서 50% 떨어진 곳에 위치
+  left: 50%; // 왼쪽에서 50% 떨어진 곳에 위치
+  transform: translate(-40%, -50%); // 왼쪽과 위로 각각 50%만큼 이동
+  text-align: center; // 텍스트를 중앙 정렬
 `;
 
 const InputContainer = styled.div`
   position: absolute;
   bottom: 5%;
+  left: 50%;
+  transform: translateX(-50%);
   width: 50%;
   display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 `;
 
 const SendButton = styled.button`
@@ -77,11 +108,11 @@ const SendButton = styled.button`
   border: none;
   width: 50px;
   height: 50px;
-  cursor: pointer;
   border-radius: 0 15px 15px 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 `;
 
 const SendIcon = styled.div`
@@ -137,6 +168,12 @@ const HeadTextLine = styled.div`
 
 const TextLine = styled.div`
   margin-top: 10px;
+`;
+
+const CenterContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 export default App;
