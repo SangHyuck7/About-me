@@ -4,7 +4,7 @@ import styled from "styled-components";
 function HeaderTitle() {
   return (
     <Container>
-      <Title>Hi my name is Sanghyuk Lee😃</Title>
+      <Title>Hi my name is Lee Sang Hyuk😃</Title>
     </Container>
   );
 }

@@ -2,24 +2,191 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import resume from "./data/resume.json";
 
-function SearchCard({ content, marginTop }) {
+import { PersonalProjects, TeamProjects, AllContents } from "./data/resumeURL";
+
+function SearchCard({ content, marginTop, onAnimationComplete }) {
   const [typedText, setTypedText] = useState("");
-  let resumeHTML = "";
+  const [typeTitle, setTypeTitle] = useState("");
+  let resumeText = "";
 
   if (content === "Contact" || content === "연락처" || content === "contact") {
-    resumeHTML = resume["Contact"];
+    resumeText = resume["Contact"];
+  } else if (
+    content === "Introduce" ||
+    content === "소개" ||
+    content === "introduce"
+  ) {
+    resumeText = resume["Introduce"];
+  } else if (
+    content === "Personal Project" ||
+    content === "개인프로젝트" ||
+    content === "personal project" ||
+    content === "개인 프로젝트" ||
+    content === "PersonalProject" ||
+    content === "personalproject"
+  ) {
+    resumeText = resume["PersonalProjects"];
+  } else if (
+    content === "Team Project" ||
+    content === "팀프로젝트" ||
+    content === "team project" ||
+    content === "팀 프로젝트" ||
+    content === "TeamProject" ||
+    content === "teamproject"
+  ) {
+    resumeText = resume["TeamProjects"];
+  } else if (
+    content === "Education" ||
+    content === "교육" ||
+    content === "education"
+  ) {
+    resumeText = resume["Education"];
+  } else if (
+    content === "All contents" ||
+    content === "Allcontents" ||
+    content === "모든 콘텐츠" ||
+    content === "모든콘텐츠" ||
+    content === "All Contents" ||
+    content === "AllContents" ||
+    content === "all contents" ||
+    content === "allcontents"
+  ) {
+    resumeText = resume["AllContents"];
   }
 
   useEffect(() => {
+    if (
+      content === "Contact" ||
+      content === "연락처" ||
+      content === "contact"
+    ) {
+      setTypeTitle("Contact");
+    } else if (
+      content === "Introduce" ||
+      content === "소개" ||
+      content === "introduce"
+    ) {
+      setTypeTitle("Introduce");
+    } else if (
+      content === "Personal Project" ||
+      content === "개인프로젝트" ||
+      content === "personal project" ||
+      content === "개인 프로젝트" ||
+      content === "PersonalProject" ||
+      content === "personalproject"
+    ) {
+      setTypeTitle("PersonalProjects");
+    } else if (
+      content === "Team Project" ||
+      content === "팀프로젝트" ||
+      content === "team project" ||
+      content === "팀 프로젝트" ||
+      content === "TeamProject" ||
+      content === "teamproject"
+    ) {
+      setTypeTitle("TeamProjects");
+    } else if (
+      content === "Education" ||
+      content === "교육" ||
+      content === "education"
+    ) {
+      setTypeTitle("Education");
+    } else if (
+      content === "All contents" ||
+      content === "Allcontents" ||
+      content === "모든 콘텐츠" ||
+      content === "모든콘텐츠" ||
+      content === "All Contents" ||
+      content === "AllContents" ||
+      content === "all contents" ||
+      content === "allcontents"
+    ) {
+      setTypeTitle("AllContents");
+    }
+  }, [content]);
+
+  useEffect(() => {
     let timer;
-    if (typedText.length < resumeHTML.length) {
+    if (typedText.length < resumeText.length) {
       timer = setTimeout(() => {
-        setTypedText(resumeHTML.substr(0, typedText.length + 1));
-      }, 100); // 100ms마다 한 글자씩 추가
+        setTypedText(resumeText.substr(0, typedText.length + 1));
+
+        if (resumeText.charAt(typedText.length) === "\n") {
+          onAnimationComplete();
+        }
+      }, 80);
     }
 
-    return () => clearTimeout(timer); // 컴포넌트 언마운트 시 타이머 정리
-  }, [typedText, resumeHTML]);
+    return () => clearTimeout(timer);
+  }, [typedText, resumeText, onAnimationComplete]);
+
+  const renderText = (text) => {
+    const lines = text.split("\n");
+    let linkIndex = 0;
+
+    return lines.map((line, index) => (
+      <span key={index}>
+        {line.split(" ").map((word, wordIndex) => {
+          if (word.startsWith("http")) {
+            return (
+              <a
+                key={wordIndex}
+                href={word}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {word}
+              </a>
+            );
+          } else if (word === "(링크)" && typeTitle === "PersonalProjects") {
+            const url = PersonalProjects[linkIndex];
+            linkIndex++;
+
+            return (
+              <a
+                key={wordIndex}
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {word}
+              </a>
+            );
+          } else if (word === "(링크)" && typeTitle === "TeamProjects") {
+            const url = TeamProjects[linkIndex];
+            linkIndex++;
+
+            return (
+              <a
+                key={wordIndex}
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {word}
+              </a>
+            );
+          } else if (word === "(링크)" && typeTitle === "AllContents") {
+            const url = AllContents[linkIndex];
+            linkIndex++;
+
+            return (
+              <a
+                key={wordIndex}
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {word}
+              </a>
+            );
+          }
+          return word + " ";
+        })}
+        {index < lines.length - 1 && <br />}
+      </span>
+    ));
+  };
 
   return (
     <>
@@ -32,7 +199,7 @@ function SearchCard({ content, marginTop }) {
       <AiContainer>
         <AiTextContainer>
           <AiProfile />
-          <AiText dangerouslySetInnerHTML={{ __html: typedText }} />
+          <AiText>{renderText(typedText)}</AiText>
         </AiTextContainer>
       </AiContainer>
     </>
@@ -48,7 +215,7 @@ const UserContainer = styled.div`
   align-items: center;
   justify-content: center;
   border: none;
-  background-color: red;
+  background-color: #343541;
   border: none;
 `;
 
@@ -59,7 +226,7 @@ const AiContainer = styled.div`
   align-items: center;
   justify-content: center;
   border: none;
-  background-color: yellow;
+  background-color: #444654;
   border: none;
 `;
 
@@ -82,10 +249,9 @@ const AiProfile = styled.div`
 `;
 
 const UserTextContainer = styled.div`
-  width: 50%;
+  width: 60%;
   padding: 5px;
-  /* background-color: #343541; */
-  background-color: blue;
+  background-color: #343541;
   display: flex;
   align-items: center;
   border: none;
@@ -95,13 +261,14 @@ const UserText = styled.p`
   color: #d9d9e3;
   font-size: 18px;
   margin: 10px;
+  padding-left: 20px;
 
   p {
-    margin: 10px 0; // 원하는 간격으로 조정
+    margin: 10px 0;
   }
 
   a {
-    color: inherit; // 링크의 색상을 상위 요소와 동일하게 설정
+    color: inherit;
   }
 `;
 
@@ -109,21 +276,19 @@ const AiText = styled.p`
   color: #d9d9e3;
   font-size: 18px;
   margin: 10px;
-
-  p {
-    margin: 10px 0; // 원하는 간격으로 조정
-  }
+  padding-left: 20px;
+  line-height: 30px;
+  white-space: pre-line;
 
   a {
-    color: inherit; // 링크의 색상을 상위 요소와 동일하게 설정
+    color: inherit;
   }
 `;
 
 const AiTextContainer = styled.div`
-  width: 50%;
+  width: 60%;
   padding: 5px;
-  /* background-color: #343541; */
-  background-color: purple;
+  background-color: #444654;
   display: flex;
   align-items: center;
   border: none;

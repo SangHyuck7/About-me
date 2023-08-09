@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 
 import HeaderTitle from "./HeaderTitle";
@@ -9,6 +9,22 @@ function App() {
   const [isSearch, setIsSearch] = useState(false);
   const [searchContent, setSearchContent] = useState("");
   const [searchContentArr, setSearchContentArr] = useState([]);
+
+  const scrollContainerRef = useRef(null);
+
+  const handleAnimationComplete = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop =
+        scrollContainerRef.current.scrollHeight;
+    }
+  };
+
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop =
+        scrollContainerRef.current.scrollHeight;
+    }
+  }, [searchContentArr]);
 
   function addSearchContent(Content) {
     if (Content.length !== 0) {
@@ -24,15 +40,19 @@ function App() {
 
   return (
     <Container>
-      {isSearch ? <HeaderTitle /> : <Title>Meet Sanghyuk Lee!</Title>}
-      {isSearch &&
-        searchContentArr.map((content, index) => (
-          <SearchCard
-            key={index}
-            content={content}
-            marginTop={index === 0 ? "72px" : "0"}
-          />
-        ))}
+      {isSearch ? <HeaderTitle /> : <Title>Meet Lee Sang Hyuk!</Title>}
+      {isSearch && (
+        <ScrollContainer ref={scrollContainerRef}>
+          {searchContentArr.map((content, index) => (
+            <SearchCard
+              key={index}
+              content={content}
+              marginTop={index === 0 ? "72px" : "0"}
+              onAnimationComplete={handleAnimationComplete}
+            />
+          ))}
+        </ScrollContainer>
+      )}
       <InputContainer>
         <InputField
           placeholder="Let's find something!"
@@ -50,6 +70,10 @@ function App() {
           <SendIcon />
         </SendButton>
       </InputContainer>
+      <FooterText>
+        Get to know Lee Sang Hyuk! Find your search keywords on the tooltip
+        icon.
+      </FooterText>
       <HelpCircle
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
@@ -84,11 +108,11 @@ const Container = styled.div`
 
 const Title = styled.h1`
   color: #565869;
-  position: absolute; // 절대 위치 지정
-  top: 40%; // 상단에서 50% 떨어진 곳에 위치
-  left: 50%; // 왼쪽에서 50% 떨어진 곳에 위치
-  transform: translate(-40%, -50%); // 왼쪽과 위로 각각 50%만큼 이동
-  text-align: center; // 텍스트를 중앙 정렬
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-40%, -50%);
+  text-align: center;
 `;
 
 const InputContainer = styled.div`
@@ -105,6 +129,7 @@ const InputContainer = styled.div`
 
 const SendButton = styled.button`
   background-color: #40414f;
+  padding: 0;
   border: none;
   width: 50px;
   height: 50px;
@@ -124,7 +149,8 @@ const SendIcon = styled.div`
 
 const InputField = styled.input`
   width: calc(100% - 40px);
-  padding: 15px;
+  height: 50px;
+  padding: 0 10px;
   border: none;
   outline: none;
   font-size: 16px;
@@ -170,10 +196,20 @@ const TextLine = styled.div`
   margin-top: 10px;
 `;
 
-const CenterContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
+const ScrollContainer = styled.div`
+  max-height: 88.5%;
+  overflow-y: auto;
+  overflow-x: hidden;
+`;
+
+const FooterText = styled.p`
+  position: absolute;
+  bottom: 0%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #d9d9e3;
+  text-align: center;
+  font-size: 15px;
 `;
 
 export default App;
