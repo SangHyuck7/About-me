@@ -36,8 +36,10 @@ function App() {
 
   useEffect(() => {
     const currentHour = new Date().getHours();
-    if (currentHour >= 18) {
+    if (currentHour >= 18 || currentHour < 7) {
       setIsDarkMode(true);
+    } else {
+      setIsDarkMode(false);
     }
   }, []);
 

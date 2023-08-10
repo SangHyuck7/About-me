@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import resume from "./data/resume.json";
 
+import resume from "./data/resume.json";
+import { keywordMapping } from "./data/keywordMapping";
 import {
   NIGHT_MAINCONTAINER_COLOR,
   NIGHT_AICONTAINER_COLOR,
@@ -14,106 +15,23 @@ import { PersonalProjects, TeamProjects, AllContents } from "./data/resumeURL";
 function SearchCard({ content, marginTop, onAnimationComplete, isDarkMode }) {
   const [typedText, setTypedText] = useState("");
   const [typeTitle, setTypeTitle] = useState("");
-  let resumeText = "";
-
-  if (content === "Contact" || content === "연락처" || content === "contact") {
-    resumeText = resume["Contact"];
-  } else if (
-    content === "Introduce" ||
-    content === "소개" ||
-    content === "introduce"
-  ) {
-    resumeText = resume["Introduce"];
-  } else if (
-    content === "Personal Project" ||
-    content === "개인프로젝트" ||
-    content === "personal project" ||
-    content === "개인 프로젝트" ||
-    content === "PersonalProject" ||
-    content === "personalproject"
-  ) {
-    resumeText = resume["PersonalProjects"];
-  } else if (
-    content === "Team Project" ||
-    content === "팀프로젝트" ||
-    content === "team project" ||
-    content === "팀 프로젝트" ||
-    content === "TeamProject" ||
-    content === "teamproject"
-  ) {
-    resumeText = resume["TeamProjects"];
-  } else if (
-    content === "Education" ||
-    content === "교육" ||
-    content === "education"
-  ) {
-    resumeText = resume["Education"];
-  } else if (
-    content === "All contents" ||
-    content === "Allcontents" ||
-    content === "모든 콘텐츠" ||
-    content === "모든콘텐츠" ||
-    content === "All Contents" ||
-    content === "AllContents" ||
-    content === "all contents" ||
-    content === "allcontents"
-  ) {
-    resumeText = resume["AllContents"];
-  } else {
-    resumeText = resume["MissingSearch"];
-  }
+  const [resumeText, setResumeText] = useState("");
 
   useEffect(() => {
-    if (
-      content === "Contact" ||
-      content === "연락처" ||
-      content === "contact"
-    ) {
-      setTypeTitle("Contact");
-    } else if (
-      content === "Introduce" ||
-      content === "소개" ||
-      content === "introduce"
-    ) {
-      setTypeTitle("Introduce");
-    } else if (
-      content === "Personal Project" ||
-      content === "개인프로젝트" ||
-      content === "personal project" ||
-      content === "개인 프로젝트" ||
-      content === "PersonalProject" ||
-      content === "personalproject"
-    ) {
-      setTypeTitle("PersonalProjects");
-    } else if (
-      content === "Team Project" ||
-      content === "팀프로젝트" ||
-      content === "team project" ||
-      content === "팀 프로젝트" ||
-      content === "TeamProject" ||
-      content === "teamproject"
-    ) {
-      setTypeTitle("TeamProjects");
-    } else if (
-      content === "Education" ||
-      content === "교육" ||
-      content === "education"
-    ) {
-      setTypeTitle("Education");
-    } else if (
-      content === "All contents" ||
-      content === "Allcontents" ||
-      content === "모든 콘텐츠" ||
-      content === "모든콘텐츠" ||
-      content === "All Contents" ||
-      content === "AllContents" ||
-      content === "all contents" ||
-      content === "allcontents"
-    ) {
-      setTypeTitle("AllContents");
-    } else {
-      setTypeTitle("MissingSearch");
+    let foundText = "";
+    for (const keyword in keywordMapping) {
+      if (content.includes(keyword)) {
+        foundText = resume[keywordMapping[keyword]];
+        setTypeTitle(keywordMapping[keyword]);
+        break;
+      }
     }
+
+    if (!foundText) {
+      foundText = resume["MissingSearch"];
+    }
+
+    setResumeText(foundText);
   }, [content]);
 
   useEffect(() => {
