@@ -2,9 +2,16 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import resume from "./data/resume.json";
 
+import {
+  NIGHT_MAINCONTAINER_COLOR,
+  NIGHT_AICONTAINER_COLOR,
+  NIGHT_CHATTEXT_COLOR,
+  DAY_MAINCONTAINER_COLOR,
+  DAY_AICONTAINER_COLOR,
+} from "./constants/color";
 import { PersonalProjects, TeamProjects, AllContents } from "./data/resumeURL";
 
-function SearchCard({ content, marginTop, onAnimationComplete }) {
+function SearchCard({ content, marginTop, onAnimationComplete, isDarkMode }) {
   const [typedText, setTypedText] = useState("");
   const [typeTitle, setTypeTitle] = useState("");
   let resumeText = "";
@@ -52,6 +59,8 @@ function SearchCard({ content, marginTop, onAnimationComplete }) {
     content === "allcontents"
   ) {
     resumeText = resume["AllContents"];
+  } else {
+    resumeText = resume["MissingSearch"];
   }
 
   useEffect(() => {
@@ -102,6 +111,8 @@ function SearchCard({ content, marginTop, onAnimationComplete }) {
       content === "allcontents"
     ) {
       setTypeTitle("AllContents");
+    } else {
+      setTypeTitle("MissingSearch");
     }
   }, [content]);
 
@@ -190,16 +201,16 @@ function SearchCard({ content, marginTop, onAnimationComplete }) {
 
   return (
     <>
-      <UserContainer style={{ marginTop: marginTop }}>
-        <UserTextContainer>
+      <UserContainer style={{ marginTop: marginTop }} isDarkMode={isDarkMode}>
+        <UserTextContainer isDarkMode={isDarkMode}>
           <UserProfile />
-          <UserText>{content}</UserText>
+          <UserText isDarkMode={isDarkMode}>{content}</UserText>
         </UserTextContainer>
       </UserContainer>
-      <AiContainer>
-        <AiTextContainer>
+      <AiContainer isDarkMode={isDarkMode}>
+        <AiTextContainer isDarkMode={isDarkMode}>
           <AiProfile />
-          <AiText>{renderText(typedText)}</AiText>
+          <AiText isDarkMode={isDarkMode}>{renderText(typedText)}</AiText>
         </AiTextContainer>
       </AiContainer>
     </>
@@ -215,7 +226,8 @@ const UserContainer = styled.div`
   align-items: center;
   justify-content: center;
   border: none;
-  background-color: #343541;
+  background-color: ${(props) =>
+    props.isDarkMode ? NIGHT_MAINCONTAINER_COLOR : DAY_MAINCONTAINER_COLOR};
   border: none;
 `;
 
@@ -226,7 +238,8 @@ const AiContainer = styled.div`
   align-items: center;
   justify-content: center;
   border: none;
-  background-color: #444654;
+  background-color: ${(props) =>
+    props.isDarkMode ? NIGHT_AICONTAINER_COLOR : DAY_AICONTAINER_COLOR};
   border: none;
 `;
 
@@ -234,15 +247,17 @@ const UserProfile = styled.div`
   width: 30px;
   height: 30px;
   border: none;
+  border-radius: 5px;
   background: url("/user-icon.png") no-repeat center center;
   background-size: cover;
-  background-color: green;
+  background-color: skyblue;
 `;
 
 const AiProfile = styled.div`
   width: 30px;
   height: 30px;
   border: none;
+  border-radius: 5px;
   background: url("/robot-icon.png") no-repeat center center;
   background-size: cover;
   background-color: orange;
@@ -251,14 +266,16 @@ const AiProfile = styled.div`
 const UserTextContainer = styled.div`
   width: 60%;
   padding: 5px;
-  background-color: #343541;
+  background-color: ${(props) =>
+    props.isDarkMode ? NIGHT_MAINCONTAINER_COLOR : DAY_MAINCONTAINER_COLOR};
   display: flex;
   align-items: center;
   border: none;
 `;
 
 const UserText = styled.p`
-  color: #d9d9e3;
+  color: ${(props) =>
+    props.isDarkMode ? NIGHT_CHATTEXT_COLOR : NIGHT_MAINCONTAINER_COLOR};
   font-size: 18px;
   margin: 10px;
   padding-left: 20px;
@@ -273,7 +290,8 @@ const UserText = styled.p`
 `;
 
 const AiText = styled.p`
-  color: #d9d9e3;
+  color: ${(props) =>
+    props.isDarkMode ? NIGHT_CHATTEXT_COLOR : NIGHT_MAINCONTAINER_COLOR};
   font-size: 18px;
   margin: 10px;
   padding-left: 20px;
@@ -288,8 +306,9 @@ const AiText = styled.p`
 const AiTextContainer = styled.div`
   width: 60%;
   padding: 5px;
-  background-color: #444654;
   display: flex;
   align-items: center;
   border: none;
+  background-color: ${(props) =>
+    props.isDarkMode ? NIGHT_AICONTAINER_COLOR : DAY_AICONTAINER_COLOR};
 `;

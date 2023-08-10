@@ -3,12 +3,27 @@ import styled from "styled-components";
 
 import HeaderTitle from "./HeaderTitle";
 import SearchCard from "./SearchCard";
+import TimeMode from "./TimeMode";
+
+import {
+  NIGHT_FIRSTTITLE_COLOR,
+  NIGHT_MAINCONTAINER_COLOR,
+  NIGHT_INPUTCONTAINER_COLOR,
+  NIGHT_INPUTBORDER_COLOR,
+  NIGHT_FOOTERTEXT_COLOR,
+  NIGHT_INPUTTEXT_COLOR,
+  DAY_MAINCONTAINER_COLOR,
+  DAY_FIRSTTITLE_COLOR,
+  DAY_INPUTBORDER_COLOR,
+  DAY_HELPCIRCLE_COLOR,
+} from "./constants/color";
 
 function App() {
   const [showTooltip, setShowTooltip] = useState(false);
   const [isSearch, setIsSearch] = useState(false);
   const [searchContent, setSearchContent] = useState("");
   const [searchContentArr, setSearchContentArr] = useState([]);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   const scrollContainerRef = useRef(null);
 
@@ -20,11 +35,22 @@ function App() {
   };
 
   useEffect(() => {
+    const currentHour = new Date().getHours();
+    if (currentHour >= 18) {
+      setIsDarkMode(true);
+    }
+  }, []);
+
+  useEffect(() => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollTop =
         scrollContainerRef.current.scrollHeight;
     }
   }, [searchContentArr]);
+
+  function handleSetIsDarkMode() {
+    setIsDarkMode(!isDarkMode);
+  }
 
   function addSearchContent(Content) {
     if (Content.length !== 0) {
@@ -39,8 +65,16 @@ function App() {
   }
 
   return (
-    <Container>
-      {isSearch ? <HeaderTitle /> : <Title>Meet Lee Sang Hyuk!</Title>}
+    <Container isDarkMode={isDarkMode}>
+      <TimeMode
+        isDarkMode={isDarkMode}
+        handleSetIsDarkMode={handleSetIsDarkMode}
+      />
+      {isSearch ? (
+        <HeaderTitle isDarkMode={isDarkMode} />
+      ) : (
+        <Title isDarkMode={isDarkMode}>Meet Lee Sang Hyuk!</Title>
+      )}
       {isSearch && (
         <ScrollContainer ref={scrollContainerRef}>
           {searchContentArr.map((content, index) => (
@@ -49,17 +83,27 @@ function App() {
               content={content}
               marginTop={index === 0 ? "72px" : "0"}
               onAnimationComplete={handleAnimationComplete}
+              isDarkMode={isDarkMode}
             />
           ))}
         </ScrollContainer>
       )}
-      <InputContainer>
+      <InputContainer isDarkMode={isDarkMode}>
         <InputField
+          isDarkMode={isDarkMode}
           placeholder="Let's find something!"
           value={searchContent}
           onChange={(e) => setSearchContent(e.target.value)}
+          onKeyPress={(e) => {
+            if (e.key === "Enter") {
+              toggleButton();
+              addSearchContent(searchContent);
+              setSearchContent("");
+            }
+          }}
         />
         <SendButton
+          isDarkMode={isDarkMode}
           type="button"
           onClick={() => {
             toggleButton();
@@ -70,11 +114,12 @@ function App() {
           <SendIcon />
         </SendButton>
       </InputContainer>
-      <FooterText>
+      <FooterText isDarkMode={isDarkMode}>
         Get to know Lee Sang Hyuk! Find your search keywords on the tooltip
         icon.
       </FooterText>
       <HelpCircle
+        isDarkMode={isDarkMode}
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
       >
@@ -84,12 +129,12 @@ function App() {
             <HeadTextLine>
               궁금한 부분을 아래 키워드로 검색해 주세요!
             </HeadTextLine>
-            <TextLine>Contact or 연락처</TextLine>
-            <TextLine>Introduce or 소개</TextLine>
-            <TextLine>Personal projects or 개인 프로젝트</TextLine>
-            <TextLine>Team projects or 팀 프로젝트</TextLine>
-            <TextLine>Education or 교육</TextLine>
-            <TextLine>All contents or 모든 콘텐츠</TextLine>
+            <TextLine>• Contact or 연락처</TextLine>
+            <TextLine>• Introduce or 소개</TextLine>
+            <TextLine>• Personal projects or 개인 프로젝트</TextLine>
+            <TextLine>• Team projects or 팀 프로젝트</TextLine>
+            <TextLine>• Education or 교육</TextLine>
+            <TextLine>• All contents or 모든 콘텐츠</TextLine>
           </Tooltip>
         )}
       </HelpCircle>
@@ -100,14 +145,16 @@ function App() {
 const Container = styled.div`
   width: 100%;
   height: 100%;
-  background-color: #343541;
+  background-color: ${(props) =>
+    props.isDarkMode ? NIGHT_MAINCONTAINER_COLOR : DAY_MAINCONTAINER_COLOR};
   position: fixed;
   top: 0;
   left: 0;
 `;
 
 const Title = styled.h1`
-  color: #565869;
+  color: ${(props) =>
+    props.isDarkMode ? NIGHT_FIRSTTITLE_COLOR : DAY_FIRSTTITLE_COLOR};
   position: absolute;
   top: 40%;
   left: 50%;
@@ -125,10 +172,18 @@ const InputContainer = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  background-color: ${(props) =>
+    props.isDarkMode ? NIGHT_INPUTCONTAINER_COLOR : DAY_MAINCONTAINER_COLOR};
+  border: ${(props) =>
+    props.isDarkMode
+      ? `1px solid ${NIGHT_INPUTBORDER_COLOR}`
+      : `1px solid ${DAY_INPUTBORDER_COLOR}`};
+  border-radius: 15px;
 `;
 
 const SendButton = styled.button`
-  background-color: #40414f;
+  background-color: ${(props) =>
+    props.isDarkMode ? NIGHT_INPUTCONTAINER_COLOR : DAY_MAINCONTAINER_COLOR};
   padding: 0;
   border: none;
   width: 50px;
@@ -155,8 +210,9 @@ const InputField = styled.input`
   outline: none;
   font-size: 16px;
   border-radius: 15px 0 0 15px;
-  background-color: #40414f;
-  color: white;
+  background-color: ${(props) =>
+    props.isDarkMode ? NIGHT_INPUTCONTAINER_COLOR : DAY_MAINCONTAINER_COLOR};
+  color: ${(props) => (props.isDarkMode ? NIGHT_INPUTTEXT_COLOR : "black")};
 `;
 
 const HelpCircle = styled.div`
@@ -165,26 +221,30 @@ const HelpCircle = styled.div`
   right: 5%;
   width: 40px;
   height: 40px;
-  background-color: #40414f;
-  color: white;
+  color: ${(props) => (props.isDarkMode ? "white" : "black")};
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
-  border: 2px solid #565869;
+  background-color: ${(props) =>
+    props.isDarkMode ? NIGHT_INPUTCONTAINER_COLOR : DAY_HELPCIRCLE_COLOR};
+  border: ${(props) =>
+    props.isDarkMode
+      ? `2px solid ${NIGHT_INPUTBORDER_COLOR}`
+      : `2px solid ${NIGHT_FOOTERTEXT_COLOR}`};
+  font-weight: 800;
   cursor: pointer;
 `;
 
 const Tooltip = styled.div`
   position: absolute;
-  top: -670%;
+  top: -600%;
   right: 0;
   padding: 20px;
-  background-color: #565869;
+  background-color: black;
   color: white;
-  border-radius: 5px;
-  font-size: 18px;
+  border-radius: 15px;
+  font-size: 15px;
   white-space: nowrap;
 `;
 
@@ -207,7 +267,9 @@ const FooterText = styled.p`
   bottom: 0%;
   left: 50%;
   transform: translateX(-50%);
-  color: #d9d9e3;
+  color: ${NIGHT_FOOTERTEXT_COLOR};
+  color: ${(props) =>
+    props.isDarkMode ? NIGHT_FOOTERTEXT_COLOR : NIGHT_INPUTBORDER_COLOR};
   text-align: center;
   font-size: 15px;
 `;

@@ -1,0 +1,14 @@
+export const NIGHT_FIRSTTITLE_COLOR = "#565869";
+export const DAY_FIRSTTITLE_COLOR = "#d9d9e3";
+export const NIGHT_MAINCONTAINER_COLOR = "#343541";
+export const DAY_MAINCONTAINER_COLOR = "#ffffff";
+export const NIGHT_INPUTCONTAINER_COLOR = "#40414f";
+export const NIGHT_INPUTBORDER_COLOR = "#565869";
+export const DAY_INPUTBORDER_COLOR = "#e5e5e5";
+export const NIGHT_HEADERBORDER_COLOR = "#2a2b32";
+export const NIGHT_FOOTERTEXT_COLOR = "#d9d9e3";
+export const NIGHT_INPUTTEXT_COLOR = "#d9d9e3";
+export const NIGHT_AICONTAINER_COLOR = "#444654";
+export const DAY_AICONTAINER_COLOR = "#f0f0f0";
+export const NIGHT_CHATTEXT_COLOR = "#d9d9e3";
+export const DAY_HELPCIRCLE_COLOR = "#f7f7f8";
