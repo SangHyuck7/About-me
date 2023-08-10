@@ -55,63 +55,98 @@ function SearchCard({ content, marginTop, onAnimationComplete, isDarkMode }) {
 
     return lines.map((line, index) => (
       <span key={index}>
-        {line.split(" ").map((word, wordIndex) => {
-          if (word.startsWith("http")) {
-            return (
-              <a
-                key={wordIndex}
-                href={word}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {word}
-              </a>
-            );
-          } else if (word === "(링크)" && typeTitle === "PersonalProjects") {
-            const url = PersonalProjects[linkIndex];
-            linkIndex++;
+        {line
+          .split(/(\{[^\}]*\})|(\[[^\]]*\])|(<[^>]*>)/)
+          .flatMap((segment, segmentIndex) => {
+            if (!segment) return [];
 
-            return (
-              <a
-                key={wordIndex}
-                href={url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {word}
-              </a>
-            );
-          } else if (word === "(링크)" && typeTitle === "TeamProjects") {
-            const url = TeamProjects[linkIndex];
-            linkIndex++;
+            if (segment.startsWith("{") && segment.endsWith("}")) {
+              return (
+                <span
+                  key={segmentIndex}
+                  style={{ fontSize: "30px", fontWeight: 800 }}
+                >
+                  {segment.substring(1, segment.length - 1)}
+                </span>
+              );
+            }
 
-            return (
-              <a
-                key={wordIndex}
-                href={url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {word}
-              </a>
-            );
-          } else if (word === "(링크)" && typeTitle === "AllContents") {
-            const url = AllContents[linkIndex];
-            linkIndex++;
+            if (segment.startsWith("[") && segment.endsWith("]")) {
+              return (
+                <span key={segmentIndex} style={{ fontWeight: 700 }}>
+                  {segment.substring(1, segment.length - 1)}
+                </span>
+              );
+            }
 
-            return (
-              <a
-                key={wordIndex}
-                href={url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {word}
-              </a>
-            );
-          }
-          return word + " ";
-        })}
+            if (segment.startsWith("<") && segment.endsWith(">")) {
+              return (
+                <span
+                  key={segmentIndex}
+                  style={{ fontSize: "25px", fontWeight: 700 }}
+                >
+                  {segment.substring(1, segment.length - 1)}
+                </span>
+              );
+            }
+
+            return segment.split(" ").map((word, wordIndex) => {
+              if (word.startsWith("http")) {
+                return (
+                  <a
+                    key={wordIndex}
+                    href={word}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {word}
+                  </a>
+                );
+              } else if (
+                word === "(링크)" &&
+                typeTitle === "PersonalProjects"
+              ) {
+                const url = PersonalProjects[linkIndex++];
+                return (
+                  <a
+                    key={wordIndex}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {word}
+                  </a>
+                );
+              } else if (word === "(링크)" && typeTitle === "TeamProjects") {
+                const url = TeamProjects[linkIndex++];
+                return (
+                  <a
+                    key={wordIndex}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {word}
+                  </a>
+                );
+              } else if (word === "(링크)" && typeTitle === "AllContents") {
+                const url = AllContents[linkIndex++];
+                return (
+                  <a
+                    key={wordIndex}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {word}
+                  </a>
+                );
+              }
+              return (
+                word + (wordIndex < segment.split(" ").length - 1 ? " " : "")
+              );
+            });
+          })}
         {index < lines.length - 1 && <br />}
       </span>
     ));
@@ -214,7 +249,6 @@ const AiText = styled.p`
   margin: 10px;
   padding-left: 20px;
   line-height: 30px;
-  white-space: pre-line;
 
   a {
     color: inherit;
