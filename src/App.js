@@ -137,6 +137,7 @@ function App() {
             <TextLine>• Team projects or 팀 프로젝트</TextLine>
             <TextLine>• Education or 교육</TextLine>
             <TextLine>• All contents or 모든 콘텐츠</TextLine>
+            <TextLine>• Resume or 이력서</TextLine>
           </Tooltip>
         )}
       </HelpCircle>
@@ -240,7 +241,7 @@ const HelpCircle = styled.div`
 
 const Tooltip = styled.div`
   position: absolute;
-  top: -600%;
+  top: -670%;
   right: 0;
   padding: 20px;
   background-color: black;
