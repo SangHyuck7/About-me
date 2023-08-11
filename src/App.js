@@ -1,9 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
+import Lottie from "lottie-react";
 
 import HeaderTitle from "./HeaderTitle";
 import SearchCard from "./SearchCard";
 import TimeMode from "./TimeMode";
+
+import animationData from "./data/handShake.json";
 
 import {
   NIGHT_FIRSTTITLE_COLOR,
@@ -75,7 +78,18 @@ function App() {
       {isSearch ? (
         <HeaderTitle isDarkMode={isDarkMode} />
       ) : (
-        <Title isDarkMode={isDarkMode}>Meet Lee Sang Hyuk!</Title>
+        <>
+          <Title isDarkMode={isDarkMode}>Meet Lee Sang Hyuk!</Title>
+          <Lottie
+            animationData={animationData}
+            style={{
+              position: "absolute",
+              top: "75%",
+              left: "50%",
+              transform: "translate(-50%, -75%)",
+            }}
+          />
+        </>
       )}
       {isSearch && (
         <ScrollContainer ref={scrollContainerRef}>
@@ -162,7 +176,6 @@ const Title = styled.h1`
   top: 40%;
   left: 50%;
   transform: translate(-40%, -50%);
-  text-align: center;
 `;
 
 const InputContainer = styled.div`
