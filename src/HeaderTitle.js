@@ -43,4 +43,12 @@ const Title = styled.h1`
   color: ${(props) =>
     props.isDarkMode ? NIGHT_FOOTERTEXT_COLOR : NIGHT_FIRSTTITLE_COLOR};
   font-size: 20px;
+
+  @media (min-width: 0px) and (max-width: 425px) {
+    font-size: 13px;
+  }
+
+  @media (min-width: 426px) and (max-width: 574px) {
+    font-size: 15px;
+  }
 `;

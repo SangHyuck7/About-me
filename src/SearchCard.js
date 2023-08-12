@@ -62,12 +62,9 @@ function SearchCard({ content, marginTop, onAnimationComplete, isDarkMode }) {
 
             if (segment.startsWith("{") && segment.endsWith("}")) {
               return (
-                <span
-                  key={segmentIndex}
-                  style={{ fontSize: "30px", fontWeight: 800 }}
-                >
+                <CurlyBraces key={segmentIndex}>
                   {segment.substring(1, segment.length - 1)}
-                </span>
+                </CurlyBraces>
               );
             }
 
@@ -81,12 +78,9 @@ function SearchCard({ content, marginTop, onAnimationComplete, isDarkMode }) {
 
             if (segment.startsWith("<") && segment.endsWith(">")) {
               return (
-                <span
-                  key={segmentIndex}
-                  style={{ fontSize: "25px", fontWeight: 700 }}
-                >
+                <Segment key={segmentIndex}>
                   {segment.substring(1, segment.length - 1)}
-                </span>
+                </Segment>
               );
             }
 
@@ -204,6 +198,16 @@ const UserProfile = styled.div`
   background: url("/user-icon.png") no-repeat center center;
   background-size: cover;
   background-color: skyblue;
+
+  @media (min-width: 0px) and (max-width: 768px) {
+    width: 20px;
+    height: 20px;
+  }
+
+  @media (min-width: 769px) and (max-width: 1024px) {
+    width: 25px;
+    height: 25px;
+  }
 `;
 
 const AiProfile = styled.div`
@@ -214,6 +218,17 @@ const AiProfile = styled.div`
   background: url("/robot-icon.png") no-repeat center center;
   background-size: cover;
   background-color: orange;
+  flex-shrink: 0;
+
+  @media (min-width: 0px) and (max-width: 768px) {
+    width: 20px;
+    height: 20px;
+  }
+
+  @media (min-width: 769px) and (max-width: 1024px) {
+    width: 25px;
+    height: 25px;
+  }
 `;
 
 const UserTextContainer = styled.div`
@@ -240,6 +255,18 @@ const UserText = styled.p`
   a {
     color: inherit;
   }
+
+  @media (min-width: 0px) and (max-width: 425px) {
+    font-size: 12px;
+  }
+
+  @media (min-width: 426px) and (max-width: 768px) {
+    font-size: 14px;
+  }
+
+  @media (min-width: 769px) and (max-width: 1024px) {
+    font-size: 16px;
+  }
 `;
 
 const AiText = styled.p`
@@ -249,9 +276,19 @@ const AiText = styled.p`
   margin: 10px;
   padding-left: 20px;
   line-height: 30px;
-
   a {
     color: inherit;
+  }
+  @media (min-width: 0px) and (max-width: 425px) {
+    font-size: 12px;
+  }
+
+  @media (min-width: 426px) and (max-width: 768px) {
+    font-size: 14px;
+  }
+
+  @media (min-width: 769px) and (max-width: 1024px) {
+    font-size: 16px;
   }
 `;
 
@@ -263,4 +300,38 @@ const AiTextContainer = styled.div`
   border: none;
   background-color: ${(props) =>
     props.isDarkMode ? NIGHT_AICONTAINER_COLOR : DAY_AICONTAINER_COLOR};
+`;
+
+const CurlyBraces = styled.span`
+  font-size: 30px;
+  font-weight: 800;
+
+  @media (min-width: 0px) and (max-width: 425px) {
+    font-size: 20px;
+  }
+
+  @media (min-width: 426px) and (max-width: 768px) {
+    font-size: 25px;
+  }
+
+  @media (min-width: 769px) and (max-width: 1024px) {
+    font-size: 27px;
+  }
+`;
+
+const Segment = styled.span`
+  font-size: 25px;
+  font-weight: 700;
+
+  @media (min-width: 0px) and (max-width: 425px) {
+    font-size: 15px;
+  }
+
+  @media (min-width: 426px) and (max-width: 768px) {
+    font-size: 18px;
+  }
+
+  @media (min-width: 769px) and (max-width: 1024px) {
+    font-size: 21px;
+  }
 `;

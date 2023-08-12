@@ -33,6 +33,20 @@ const ToggleButton = styled.button`
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
+
+  @media (min-width: 0px) and (max-width: 425px) {
+    top: 25px;
+    right: 10px;
+    width: 75px;
+    height: 20px;
+  }
+
+  @media (min-width: 426px) and (max-width: 574px) {
+    top: 22.5px;
+    right: 10px;
+    width: 85px;
+    height: 25px;
+  }
 `;
 
 const ToggleCircle = styled.div`
@@ -47,4 +61,16 @@ const ToggleCircle = styled.div`
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
+
+  @media (min-width: 0px) and (max-width: 425px) {
+    width: 20px;
+    height: 20px;
+    margin-left: ${(props) => (props.isDarkMode ? "55px" : "0px")};
+  }
+
+  @media (min-width: 426px) and (max-width: 574px) {
+    width: 25px;
+    height: 25px;
+    margin-left: ${(props) => (props.isDarkMode ? "60px" : "0px")};
+  }
 `;

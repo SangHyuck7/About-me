@@ -5,6 +5,7 @@ import Lottie from "lottie-react";
 import HeaderTitle from "./HeaderTitle";
 import SearchCard from "./SearchCard";
 import TimeMode from "./TimeMode";
+import ErrorPage from "./ErrorPage";
 
 import animationData from "./data/handShake.json";
 
@@ -70,92 +71,89 @@ function App() {
   }
 
   return (
-    <Container isDarkMode={isDarkMode}>
-      <TimeMode
-        isDarkMode={isDarkMode}
-        handleSetIsDarkMode={handleSetIsDarkMode}
-      />
-      {isSearch ? (
-        <HeaderTitle isDarkMode={isDarkMode} />
-      ) : (
-        <>
-          <Title isDarkMode={isDarkMode}>Meet Lee Sang Hyuk!</Title>
-          <Lottie
-            animationData={animationData}
-            style={{
-              position: "absolute",
-              top: "75%",
-              left: "50%",
-              transform: "translate(-50%, -75%)",
+    <>
+      <ErrorContainer>
+        <ErrorPage isDarkMode={isDarkMode}></ErrorPage>
+      </ErrorContainer>
+      <Container isDarkMode={isDarkMode}>
+        <TimeMode
+          isDarkMode={isDarkMode}
+          handleSetIsDarkMode={handleSetIsDarkMode}
+        />
+        {isSearch ? (
+          <HeaderTitle isDarkMode={isDarkMode} />
+        ) : (
+          <>
+            <Title isDarkMode={isDarkMode}>Meet Lee Sang Hyuk!</Title>
+            <StyledLottie animationData={animationData} />
+          </>
+        )}
+        {isSearch && (
+          <ScrollContainer ref={scrollContainerRef}>
+            {searchContentArr.map((content, index) => (
+              <SearchCard
+                key={index}
+                content={content}
+                marginTop={index === 0 ? "72px" : "0"}
+                onAnimationComplete={handleAnimationComplete}
+                isDarkMode={isDarkMode}
+              />
+            ))}
+          </ScrollContainer>
+        )}
+        <InputContainer isDarkMode={isDarkMode}>
+          <InputField
+            isDarkMode={isDarkMode}
+            placeholder="Let's find something!"
+            value={searchContent}
+            onChange={(e) => setSearchContent(e.target.value)}
+            onKeyPress={(e) => {
+              if (e.key === "Enter") {
+                toggleButton();
+                addSearchContent(searchContent);
+                setSearchContent("");
+              }
             }}
           />
-        </>
-      )}
-      {isSearch && (
-        <ScrollContainer ref={scrollContainerRef}>
-          {searchContentArr.map((content, index) => (
-            <SearchCard
-              key={index}
-              content={content}
-              marginTop={index === 0 ? "72px" : "0"}
-              onAnimationComplete={handleAnimationComplete}
-              isDarkMode={isDarkMode}
-            />
-          ))}
-        </ScrollContainer>
-      )}
-      <InputContainer isDarkMode={isDarkMode}>
-        <InputField
-          isDarkMode={isDarkMode}
-          placeholder="Let's find something!"
-          value={searchContent}
-          onChange={(e) => setSearchContent(e.target.value)}
-          onKeyPress={(e) => {
-            if (e.key === "Enter") {
+          <SendButton
+            isDarkMode={isDarkMode}
+            type="button"
+            onClick={() => {
               toggleButton();
               addSearchContent(searchContent);
               setSearchContent("");
-            }
-          }}
-        />
-        <SendButton
+            }}
+          >
+            <SendIcon />
+          </SendButton>
+        </InputContainer>
+        <FooterText isDarkMode={isDarkMode}>
+          Get to know Lee Sang Hyuk! Find your search keywords on the tooltip
+          icon.
+        </FooterText>
+        <HelpCircle
           isDarkMode={isDarkMode}
-          type="button"
-          onClick={() => {
-            toggleButton();
-            addSearchContent(searchContent);
-            setSearchContent("");
-          }}
+          onMouseEnter={() => setShowTooltip(true)}
+          onMouseLeave={() => setShowTooltip(false)}
         >
-          <SendIcon />
-        </SendButton>
-      </InputContainer>
-      <FooterText isDarkMode={isDarkMode}>
-        Get to know Lee Sang Hyuk! Find your search keywords on the tooltip
-        icon.
-      </FooterText>
-      <HelpCircle
-        isDarkMode={isDarkMode}
-        onMouseEnter={() => setShowTooltip(true)}
-        onMouseLeave={() => setShowTooltip(false)}
-      >
-        ?
-        {showTooltip && (
-          <Tooltip>
-            <HeadTextLine>
-              궁금한 부분을 아래 키워드로 검색해 주세요!
-            </HeadTextLine>
-            <TextLine>• Contact or 연락처</TextLine>
-            <TextLine>• Introduce or 소개</TextLine>
-            <TextLine>• Personal projects or 개인 프로젝트</TextLine>
-            <TextLine>• Team projects or 팀 프로젝트</TextLine>
-            <TextLine>• Education or 교육</TextLine>
-            <TextLine>• All contents or 모든 콘텐츠</TextLine>
-            <TextLine>• Resume or 이력서</TextLine>
-          </Tooltip>
-        )}
-      </HelpCircle>
-    </Container>
+          ?
+          {showTooltip && (
+            <Tooltip>
+              <HeadTextLine>
+                궁금한 부분을 아래 키워드로 검색해 주세요!
+              </HeadTextLine>
+              <TextLine>• Contact or 연락처</TextLine>
+              <TextLine>• Introduce or 소개</TextLine>
+              <TextLine>• Personal projects or 개인 프로젝트</TextLine>
+              <TextLine>• Team projects or 팀 프로젝트</TextLine>
+              <TextLine>• Education or 교육</TextLine>
+              <TextLine>• All contents or 모든 콘텐츠</TextLine>
+              <TextLine>• Resume or 이력서</TextLine>
+            </Tooltip>
+          )}
+        </HelpCircle>
+      </Container>
+    </>
   );
 }
 
@@ -167,6 +165,22 @@ const Container = styled.div`
   position: fixed;
   top: 0;
   left: 0;
+
+  @media (max-width: 374px) {
+    display: none;
+  }
+`;
+
+const ErrorContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  @media (max-width: 374px) {
+    display: block;
+  }
 `;
 
 const Title = styled.h1`
@@ -176,6 +190,14 @@ const Title = styled.h1`
   top: 40%;
   left: 50%;
   transform: translate(-40%, -50%);
+
+  @media (min-width: 0px) and (max-width: 425px) {
+    font-size: 18px;
+  }
+
+  @media (min-width: 426px) and (max-width: 768px) {
+    font-size: 22px;
+  }
 `;
 
 const InputContainer = styled.div`
@@ -183,7 +205,8 @@ const InputContainer = styled.div`
   bottom: 5%;
   left: 50%;
   transform: translateX(-50%);
-  width: 50%;
+  width: 60%;
+  height: 40px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -195,6 +218,11 @@ const InputContainer = styled.div`
       ? `1px solid ${NIGHT_INPUTBORDER_COLOR}`
       : `1px solid ${DAY_INPUTBORDER_COLOR}`};
   border-radius: 15px;
+
+  @media (min-width: 0px) and (max-width: 425px) {
+    bottom: 6%;
+    height: 30px;
+  }
 `;
 
 const SendButton = styled.button`
@@ -203,12 +231,19 @@ const SendButton = styled.button`
   padding: 0;
   border: none;
   width: 50px;
-  height: 50px;
+  height: 40px;
   border-radius: 0 15px 15px 0;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+
+  @media (min-width: 0px) and (max-width: 425px) {
+    height: 30px;
+  }
+  @media (min-width: 426px) and (max-width: 768px) {
+    height: 40px;
+  }
 `;
 
 const SendIcon = styled.div`
@@ -216,11 +251,21 @@ const SendIcon = styled.div`
   background-size: cover;
   width: 30px;
   height: 30px;
+
+  @media (min-width: 0px) and (max-width: 425px) {
+    width: 20px;
+    height: 20px;
+  }
+
+  @media (min-width: 426px) and (max-width: 768px) {
+    width: 25px;
+    height: 25px;
+  }
 `;
 
 const InputField = styled.input`
   width: calc(100% - 40px);
-  height: 50px;
+  height: 40px;
   padding: 0 10px;
   border: none;
   outline: none;
@@ -229,6 +274,16 @@ const InputField = styled.input`
   background-color: ${(props) =>
     props.isDarkMode ? NIGHT_INPUTCONTAINER_COLOR : DAY_MAINCONTAINER_COLOR};
   color: ${(props) => (props.isDarkMode ? NIGHT_INPUTTEXT_COLOR : "black")};
+
+  @media (min-width: 0px) and (max-width: 425px) {
+    height: 30px;
+    font-size: 13px;
+  }
+
+  @media (min-width: 426px) and (max-width: 949px) {
+    height: 40px;
+    font-size: 15px;
+  }
 `;
 
 const HelpCircle = styled.div`
@@ -250,6 +305,18 @@ const HelpCircle = styled.div`
       : `2px solid ${NIGHT_FOOTERTEXT_COLOR}`};
   font-weight: 800;
   cursor: pointer;
+
+  @media (min-width: 0px) and (max-width: 425px) {
+    bottom: 6%;
+    width: 30px;
+    height: 30px;
+  }
+
+  @media (min-width: 426px) and (max-width: 768px) {
+    bottom: 5%;
+    width: 40px;
+    height: 40px;
+  }
 `;
 
 const Tooltip = styled.div`
@@ -262,6 +329,16 @@ const Tooltip = styled.div`
   border-radius: 15px;
   font-size: 15px;
   white-space: nowrap;
+
+  @media (min-width: 0px) and (max-width: 425px) {
+    font-size: 10px;
+    top: -740%;
+  }
+
+  @media (min-width: 426px) and (max-width: 1024px) {
+    font-size: 13px;
+    top: -630%;
+  }
 `;
 
 const HeadTextLine = styled.div`
@@ -288,6 +365,29 @@ const FooterText = styled.p`
     props.isDarkMode ? NIGHT_FOOTERTEXT_COLOR : NIGHT_INPUTBORDER_COLOR};
   text-align: center;
   font-size: 15px;
+
+  @media (min-width: 0px) and (max-width: 425px) {
+    font-size: 10px;
+  }
+
+  @media (min-width: 426px) and (max-width: 949px) {
+    font-size: 12px;
+  }
+`;
+
+const StyledLottie = styled(Lottie)`
+  position: absolute;
+  top: 75%;
+  left: 50%;
+  transform: translate(-50%, -75%);
+
+  @media (min-width: 0px) and (max-width: 489px) {
+    top: 60%;
+  }
+
+  @media (min-width: 490px) and (max-width: 768px) {
+    top: 68%;
+  }
 `;
 
 export default App;
