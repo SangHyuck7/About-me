@@ -43,7 +43,7 @@ function SearchCard({ content, marginTop, onAnimationComplete, isDarkMode }) {
         if (resumeText.charAt(typedText.length) === "\n") {
           onAnimationComplete();
         }
-      }, 80);
+      }, 50);
     }
 
     return () => clearTimeout(timer);
