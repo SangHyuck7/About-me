@@ -32,8 +32,7 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  border-bottom: 2px solid ${NIGHT_HEADERBORDER_COLOR};
-  border: ${(props) =>
+  border-bottom: ${(props) =>
     props.isDarkMode
       ? `2px solid ${NIGHT_HEADERBORDER_COLOR}`
       : `2px solid ${DAY_INPUTBORDER_COLOR}`};

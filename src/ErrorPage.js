@@ -14,7 +14,7 @@ function ErrorPage({ isDarkMode }) {
   return (
     <Container isDarkMode={isDarkMode}>
       <StyledLottie animationData={animationData}></StyledLottie>
-      <Text isDarkMode={isDarkMode}>Screens smaller than 374px</Text>
+      <Text isDarkMode={isDarkMode}>Screens smaller than 360px</Text>
       <Text isDarkMode={isDarkMode}>are not supported.</Text>
     </Container>
   );

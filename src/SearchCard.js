@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 
 import resume from "./data/resume.json";
@@ -12,10 +12,19 @@ import {
 } from "./constants/color";
 import { PersonalProjects, TeamProjects, AllContents } from "./data/resumeURL";
 
-function SearchCard({ content, marginTop, onAnimationComplete, isDarkMode }) {
+function SearchCard({
+  content,
+  marginTop,
+  onAnimationComplete,
+  isDarkMode,
+  handleSetIsStop,
+  handleSetIsTypingHalted,
+  isTypingHalted,
+}) {
   const [typedText, setTypedText] = useState("");
   const [typeTitle, setTypeTitle] = useState("");
   const [resumeText, setResumeText] = useState("");
+  const [stopText, setStopText] = useState(false);
 
   useEffect(() => {
     let foundText = "";
@@ -35,21 +44,41 @@ function SearchCard({ content, marginTop, onAnimationComplete, isDarkMode }) {
   }, [content]);
 
   useEffect(() => {
-    let timer;
-    if (typedText.length < resumeText.length) {
-      timer = setTimeout(() => {
-        setTypedText(resumeText.substr(0, typedText.length + 1));
+    if (stopText) {
+      handleSetIsTypingHalted(false);
+      return;
+    } else {
+      let timer;
+      if (typedText.length < resumeText.length) {
+        timer = setTimeout(() => {
+          setTypedText(resumeText.substr(0, typedText.length + 1));
 
-        if (resumeText.charAt(typedText.length) === "\n") {
-          onAnimationComplete();
-        }
-      }, 50);
+          if (resumeText.charAt(typedText.length) === "\n") {
+            onAnimationComplete();
+          }
+        }, 50);
+      }
+
+      return () => clearTimeout(timer);
     }
-
-    return () => clearTimeout(timer);
   }, [typedText, resumeText, onAnimationComplete]);
 
-  const renderText = (text) => {
+  useEffect(() => {
+    if (!typedText.length && resumeText.length) {
+      handleSetIsStop();
+    }
+    if (typedText.length === resumeText.length && typedText.length) {
+      handleSetIsStop();
+    }
+  }, [typedText, resumeText, handleSetIsStop]);
+
+  useEffect(() => {
+    if (isTypingHalted) {
+      setStopText(true);
+    }
+  }, [isTypingHalted, stopText]);
+
+  const renderText = useCallback((text) => {
     const lines = text.split("\n");
     let linkIndex = 0;
 
@@ -144,7 +173,7 @@ function SearchCard({ content, marginTop, onAnimationComplete, isDarkMode }) {
         {index < lines.length - 1 && <br />}
       </span>
     ));
-  };
+  }, []);
 
   return (
     <>
@@ -276,9 +305,11 @@ const AiText = styled.p`
   margin: 10px;
   padding-left: 20px;
   line-height: 30px;
+
   a {
     color: inherit;
   }
+
   @media (min-width: 0px) and (max-width: 425px) {
     font-size: 12px;
   }

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import Lottie from "lottie-react";
 
@@ -20,6 +20,9 @@ import {
   DAY_FIRSTTITLE_COLOR,
   DAY_INPUTBORDER_COLOR,
   DAY_HELPCIRCLE_COLOR,
+  NIGHT_HEADERBORDER_COLOR,
+  NIGHT_AICONTAINER_COLOR,
+  DAY_AICONTAINER_COLOR,
 } from "./constants/color";
 
 function App() {
@@ -28,6 +31,9 @@ function App() {
   const [searchContent, setSearchContent] = useState("");
   const [searchContentArr, setSearchContentArr] = useState([]);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isStop, setIsStop] = useState(false);
+  const [prevSearchContent, setPrevSearchContent] = useState("");
+  const [isTypingHalted, setIsTypingHalted] = useState(false);
 
   const scrollContainerRef = useRef(null);
 
@@ -58,6 +64,14 @@ function App() {
     setIsDarkMode(!isDarkMode);
   }
 
+  function handleSetIsTypingHalted() {
+    setIsTypingHalted(false);
+  }
+
+  const handleSetIsStop = useCallback(() => {
+    setIsStop((prevIsStop) => !prevIsStop);
+  }, []);
+
   function addSearchContent(Content) {
     if (Content.length !== 0) {
       setSearchContentArr([...searchContentArr, Content]);
@@ -67,6 +81,15 @@ function App() {
   function toggleButton() {
     if (searchContent.length !== 0 && !isSearch) {
       setIsSearch(true);
+    }
+  }
+
+  function onClickStopButton() {
+    if (!isStop) {
+      addSearchContent(prevSearchContent);
+    } else {
+      setIsTypingHalted(true);
+      setIsStop(false);
     }
   }
 
@@ -89,7 +112,7 @@ function App() {
           </>
         )}
         {isSearch && (
-          <ScrollContainer ref={scrollContainerRef}>
+          <ScrollContainer ref={scrollContainerRef} isDarkMode={isDarkMode}>
             {searchContentArr.map((content, index) => (
               <SearchCard
                 key={index}
@@ -97,6 +120,9 @@ function App() {
                 marginTop={index === 0 ? "72px" : "0"}
                 onAnimationComplete={handleAnimationComplete}
                 isDarkMode={isDarkMode}
+                handleSetIsStop={handleSetIsStop}
+                handleSetIsTypingHalted={handleSetIsTypingHalted}
+                isTypingHalted={isTypingHalted}
               />
             ))}
           </ScrollContainer>
@@ -111,9 +137,11 @@ function App() {
               if (e.key === "Enter") {
                 toggleButton();
                 addSearchContent(searchContent);
+                setPrevSearchContent(searchContent);
                 setSearchContent("");
               }
             }}
+            disabled={isStop}
           />
           <SendButton
             isDarkMode={isDarkMode}
@@ -121,6 +149,7 @@ function App() {
             onClick={() => {
               toggleButton();
               addSearchContent(searchContent);
+              setPrevSearchContent(searchContent);
               setSearchContent("");
             }}
           >
@@ -131,6 +160,16 @@ function App() {
           Get to know Lee Sang Hyuk! Find your search keywords on the tooltip
           icon.
         </FooterText>
+        {isSearch && (
+          <StopButton
+            isDarkMode={isDarkMode}
+            onClick={() => {
+              onClickStopButton();
+            }}
+          >
+            {isStop ? "Stop Writing" : "Rewrite"}
+          </StopButton>
+        )}
         <HelpCircle
           isDarkMode={isDarkMode}
           onMouseEnter={() => setShowTooltip(true)}
@@ -166,7 +205,7 @@ const Container = styled.div`
   top: 0;
   left: 0;
 
-  @media (max-width: 374px) {
+  @media (max-width: 360px) {
     display: none;
   }
 `;
@@ -178,7 +217,7 @@ const ErrorContainer = styled.div`
   top: 0;
   left: 0;
 
-  @media (max-width: 374px) {
+  @media (max-width: 360px) {
     display: block;
   }
 `;
@@ -350,9 +389,17 @@ const TextLine = styled.div`
 `;
 
 const ScrollContainer = styled.div`
-  max-height: 88.5%;
+  max-height: 83%;
   overflow-y: auto;
   overflow-x: hidden;
+  border-bottom: ${(props) =>
+    props.isDarkMode
+      ? `2px solid ${NIGHT_HEADERBORDER_COLOR}`
+      : `2px solid ${DAY_INPUTBORDER_COLOR}`};
+
+  @media (min-width: 0px) and (max-width: 425px) {
+    max-height: 84%;
+  }
 `;
 
 const FooterText = styled.p`
@@ -387,6 +434,37 @@ const StyledLottie = styled(Lottie)`
 
   @media (min-width: 490px) and (max-width: 768px) {
     top: 68%;
+  }
+`;
+
+const StopButton = styled.button`
+  position: absolute;
+  bottom: 11%;
+  right: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 15px;
+  color: ${(props) => (props.isDarkMode ? "white" : "black")};
+  background-color: ${(props) =>
+    props.isDarkMode ? NIGHT_INPUTCONTAINER_COLOR : DAY_MAINCONTAINER_COLOR};
+  border: ${(props) =>
+    props.isDarkMode
+      ? `2px solid ${NIGHT_INPUTBORDER_COLOR}`
+      : `2px solid ${DAY_INPUTBORDER_COLOR}`};
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${(props) =>
+      props.isDarkMode ? NIGHT_AICONTAINER_COLOR : DAY_AICONTAINER_COLOR};
+  }
+
+  @media (min-width: 0px) and (max-width: 425px) {
+    height: 30px;
+    font-size: 13px;
   }
 `;
 
