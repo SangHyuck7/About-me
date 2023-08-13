@@ -145,6 +145,7 @@ function App() {
           />
           <SendButton
             isDarkMode={isDarkMode}
+            disabled={isStop}
             type="button"
             onClick={() => {
               toggleButton();
