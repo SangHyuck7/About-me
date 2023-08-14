@@ -52,18 +52,15 @@ function SearchCard({
       if (typedText.length < resumeText.length) {
         timer = setTimeout(() => {
           setTypedText(resumeText.substr(0, typedText.length + 1));
-
-          if (resumeText.charAt(typedText.length) === "\n") {
-            onAnimationComplete();
-          }
         }, 50);
       }
 
       return () => clearTimeout(timer);
     }
-  }, [typedText, resumeText, onAnimationComplete]);
+  }, [typedText, resumeText]);
 
   useEffect(() => {
+    onAnimationComplete();
     if (!typedText.length && resumeText.length) {
       handleSetIsStop();
     }
