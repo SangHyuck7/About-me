@@ -35,7 +35,7 @@ export const keywordMapping = {
   hello: "Greetings",
   Hi: "Greetings",
   Hello: "Greetings",
-  Resume: "Resume",
-  resume: "Resume",
-  이력서: "Resume",
+  Resume: "ResumeLink",
+  resume: "ResumeLink",
+  이력서: "ResumeLink",
 };

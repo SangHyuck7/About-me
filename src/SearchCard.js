@@ -10,7 +10,12 @@ import {
   DAY_MAINCONTAINER_COLOR,
   DAY_AICONTAINER_COLOR,
 } from "./constants/color";
-import { PersonalProjects, TeamProjects, AllContents } from "./data/resumeURL";
+import {
+  PersonalProjects,
+  TeamProjects,
+  AllContents,
+  resumeURL,
+} from "./data/resumeURL";
 
 function SearchCard({
   content,
@@ -75,102 +80,124 @@ function SearchCard({
     }
   }, [isTypingHalted, stopText]);
 
-  const renderText = useCallback((text) => {
-    const lines = text.split("\n");
-    let linkIndex = 0;
+  const renderText = useCallback(
+    (text) => {
+      const lines = text.split("\n");
+      let linkIndex = 0;
 
-    return lines.map((line, index) => (
-      <span key={index}>
-        {line
-          .split(/(\{[^\}]*\})|(\[[^\]]*\])|(<[^>]*>)/)
-          .flatMap((segment, segmentIndex) => {
-            if (!segment) return [];
+      return lines.map((line, index) => (
+        <span key={index}>
+          {line
+            .split(/(\{[^\}]*\})|(\[[^\]]*\])|(<[^>]*>)|(Google Drive link)/)
+            .flatMap((segment, segmentIndex) => {
+              if (!segment) return [];
 
-            if (segment.startsWith("{") && segment.endsWith("}")) {
-              return (
-                <CurlyBraces key={segmentIndex}>
-                  {segment.substring(1, segment.length - 1)}
-                </CurlyBraces>
-              );
-            }
-
-            if (segment.startsWith("[") && segment.endsWith("]")) {
-              return (
-                <span key={segmentIndex} style={{ fontWeight: 700 }}>
-                  {segment.substring(1, segment.length - 1)}
-                </span>
-              );
-            }
-
-            if (segment.startsWith("<") && segment.endsWith(">")) {
-              return (
-                <Segment key={segmentIndex}>
-                  {segment.substring(1, segment.length - 1)}
-                </Segment>
-              );
-            }
-
-            return segment.split(" ").map((word, wordIndex) => {
-              if (word.startsWith("http")) {
+              if (segment.startsWith("{") && segment.endsWith("}")) {
                 return (
-                  <a
-                    key={wordIndex}
-                    href={word}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {word}
-                  </a>
+                  <CurlyBraces key={segmentIndex}>
+                    {segment.substring(1, segment.length - 1)}
+                  </CurlyBraces>
                 );
-              } else if (
-                word === "(링크)" &&
-                typeTitle === "PersonalProjects"
+              }
+
+              if (segment.startsWith("[") && segment.endsWith("]")) {
+                return (
+                  <span key={segmentIndex} style={{ fontWeight: 700 }}>
+                    {segment.substring(1, segment.length - 1)}
+                  </span>
+                );
+              }
+
+              if (segment.startsWith("<") && segment.endsWith(">")) {
+                return (
+                  <Segment key={segmentIndex}>
+                    {segment.substring(1, segment.length - 1)}
+                  </Segment>
+                );
+              }
+
+              if (
+                segment === "Google Drive link" &&
+                typeTitle === "ResumeLink"
               ) {
-                const url = PersonalProjects[linkIndex++];
                 return (
                   <a
-                    key={wordIndex}
-                    href={url}
+                    key={segmentIndex}
+                    href={resumeURL}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    {word}
-                  </a>
-                );
-              } else if (word === "(링크)" && typeTitle === "TeamProjects") {
-                const url = TeamProjects[linkIndex++];
-                return (
-                  <a
-                    key={wordIndex}
-                    href={url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {word}
-                  </a>
-                );
-              } else if (word === "(링크)" && typeTitle === "AllContents") {
-                const url = AllContents[linkIndex++];
-                return (
-                  <a
-                    key={wordIndex}
-                    href={url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {word}
+                    {segment}
                   </a>
                 );
               }
-              return (
-                word + (wordIndex < segment.split(" ").length - 1 ? " " : "")
-              );
-            });
-          })}
-        {index < lines.length - 1 && <br />}
-      </span>
-    ));
-  }, []);
+
+              return segment.split(" ").map((word, wordIndex) => {
+                if (word.startsWith("http")) {
+                  return (
+                    <a
+                      key={wordIndex}
+                      href={word}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {word}
+                    </a>
+                  );
+                } else if (
+                  word === "(링크)" &&
+                  typeTitle === "PersonalProjects"
+                ) {
+                  const url = PersonalProjects[linkIndex++];
+
+                  return (
+                    <a
+                      key={wordIndex}
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {word}
+                    </a>
+                  );
+                } else if (word === "(링크)" && typeTitle === "TeamProjects") {
+                  const url = TeamProjects[linkIndex++];
+
+                  return (
+                    <a
+                      key={wordIndex}
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {word}
+                    </a>
+                  );
+                } else if (word === "(링크)" && typeTitle === "AllContents") {
+                  const url = AllContents[linkIndex++];
+
+                  return (
+                    <a
+                      key={wordIndex}
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {word}
+                    </a>
+                  );
+                }
+                return (
+                  word + (wordIndex < segment.split(" ").length - 1 ? " " : "")
+                );
+              });
+            })}
+          {index < lines.length - 1 && <br />}
+        </span>
+      ));
+    },
+    [typeTitle]
+  );
 
   return (
     <>

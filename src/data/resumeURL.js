@@ -17,3 +17,6 @@ export const TeamProjects = [
 ];
 
 export const AllContents = [...PersonalProjects, ...TeamProjects];
+
+export const resumeURL =
+  "https://drive.google.com/file/d/1mNOrYXBAaF5XHFOwdsm1JcqacVKo1me_/view";
