@@ -29,3 +29,9 @@ export const AllContents = [...Careers, ...PersonalProjects, ...TeamProjects];
 
 export const resumeURL =
   "https://drive.google.com/file/d/1nl0gRaZ8nYoNvJJ7a-yrhsOk70spSGmr/view?usp=sharing";
+
+export const workExperience =
+  "https://ming2ki2.notion.site/Work-Experience-35822e69e9984fb093fb5c4dbda5e23d";
+
+export const studyNotion =
+  "https://ming2ki2.notion.site/Research-84567ad1938d4e9d9b811bfd71f1d349?pvs=4";

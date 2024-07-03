@@ -16,7 +16,10 @@ import {
   AllContents,
   resumeURL,
   Careers,
+  workExperience,
+  studyNotion,
 } from "./data/resumeURL";
+import { SEARCH_SPLIT_REGEX } from "./utils/regex.ts";
 
 function SearchCard({
   content,
@@ -88,124 +91,145 @@ function SearchCard({
 
       return lines.map((line, index) => (
         <span key={index}>
-          {line
-            .split(/(\{[^\}]*\})|(\[[^\]]*\])|(<[^>]*>)|(Google Drive link)/)
-            .flatMap((segment, segmentIndex) => {
-              if (!segment) return [];
+          {line.split(SEARCH_SPLIT_REGEX).flatMap((segment, segmentIndex) => {
+            if (!segment) return [];
 
-              if (segment.startsWith("{") && segment.endsWith("}")) {
-                return (
-                  <CurlyBraces key={segmentIndex}>
-                    {segment.substring(1, segment.length - 1)}
-                  </CurlyBraces>
-                );
-              }
+            if (segment.startsWith("{") && segment.endsWith("}")) {
+              return (
+                <CurlyBraces key={segmentIndex}>
+                  {segment.substring(1, segment.length - 1)}
+                </CurlyBraces>
+              );
+            }
 
-              if (segment.startsWith("[") && segment.endsWith("]")) {
-                return (
-                  <span key={segmentIndex} style={{ fontWeight: 700 }}>
-                    {segment.substring(1, segment.length - 1)}
-                  </span>
-                );
-              }
+            if (segment.startsWith("[") && segment.endsWith("]")) {
+              return (
+                <span key={segmentIndex} style={{ fontWeight: 700 }}>
+                  {segment.substring(1, segment.length - 1)}
+                </span>
+              );
+            }
 
-              if (segment.startsWith("<") && segment.endsWith(">")) {
-                return (
-                  <Segment key={segmentIndex}>
-                    {segment.substring(1, segment.length - 1)}
-                  </Segment>
-                );
-              }
+            if (segment.startsWith("<") && segment.endsWith(">")) {
+              return (
+                <Segment key={segmentIndex}>
+                  {segment.substring(1, segment.length - 1)}
+                </Segment>
+              );
+            }
 
-              if (
-                segment === "Google Drive link" &&
-                typeTitle === "ResumeLink"
-              ) {
+            if (segment === "Work Experience Link") {
+              return (
+                <a
+                  key={segmentIndex}
+                  href={workExperience}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {segment}
+                </a>
+              );
+            }
+
+            if (segment === "Study Notion Link") {
+              return (
+                <a
+                  key={segmentIndex}
+                  href={studyNotion}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {segment}
+                </a>
+              );
+            }
+
+            if (segment === "Google Drive link" && typeTitle === "ResumeLink") {
+              return (
+                <a
+                  key={segmentIndex}
+                  href={resumeURL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {segment}
+                </a>
+              );
+            }
+
+            return segment.split(" ").map((word, wordIndex) => {
+              if (word.startsWith("http")) {
                 return (
                   <a
-                    key={segmentIndex}
-                    href={resumeURL}
+                    key={wordIndex}
+                    href={word}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    {segment}
+                    {word}
+                  </a>
+                );
+              } else if (
+                word === "(링크)" &&
+                typeTitle === "PersonalProjects"
+              ) {
+                const url = PersonalProjects[linkIndex++];
+
+                return (
+                  <a
+                    key={wordIndex}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {word}
+                  </a>
+                );
+              } else if (word === "(링크)" && typeTitle === "TeamProjects") {
+                const url = TeamProjects[linkIndex++];
+
+                return (
+                  <a
+                    key={wordIndex}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {word}
+                  </a>
+                );
+              } else if (word === "(링크)" && typeTitle === "Careers") {
+                const url = Careers[linkIndex++];
+
+                return (
+                  <a
+                    key={wordIndex}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {word}
+                  </a>
+                );
+              } else if (word === "(링크)" && typeTitle === "AllContents") {
+                const url = AllContents[linkIndex++];
+
+                return (
+                  <a
+                    key={wordIndex}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {word}
                   </a>
                 );
               }
-
-              return segment.split(" ").map((word, wordIndex) => {
-                if (word.startsWith("http")) {
-                  return (
-                    <a
-                      key={wordIndex}
-                      href={word}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {word}
-                    </a>
-                  );
-                } else if (
-                  word === "(링크)" &&
-                  typeTitle === "PersonalProjects"
-                ) {
-                  const url = PersonalProjects[linkIndex++];
-
-                  return (
-                    <a
-                      key={wordIndex}
-                      href={url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {word}
-                    </a>
-                  );
-                } else if (word === "(링크)" && typeTitle === "TeamProjects") {
-                  const url = TeamProjects[linkIndex++];
-
-                  return (
-                    <a
-                      key={wordIndex}
-                      href={url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {word}
-                    </a>
-                  );
-                } else if (word === "(링크)" && typeTitle === "Careers") {
-                  const url = Careers[linkIndex++];
-
-                  return (
-                    <a
-                      key={wordIndex}
-                      href={url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {word}
-                    </a>
-                  );
-                } else if (word === "(링크)" && typeTitle === "AllContents") {
-                  const url = AllContents[linkIndex++];
-
-                  return (
-                    <a
-                      key={wordIndex}
-                      href={url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {word}
-                    </a>
-                  );
-                }
-                return (
-                  word + (wordIndex < segment.split(" ").length - 1 ? " " : "")
-                );
-              });
-            })}
+              return (
+                word + (wordIndex < segment.split(" ").length - 1 ? " " : "")
+              );
+            });
+          })}
           {index < lines.length - 1 && <br />}
         </span>
       ));
