@@ -16,7 +16,16 @@ export const TeamProjects = [
   "https://github.com/Team-Orm/the-beat-client#web-audio-api%EC%99%80-canvas-api%EC%9D%98-%EC%8B%B1%ED%81%AC%EB%A5%BC-%EC%96%B4%EB%96%BB%EA%B2%8C-%EB%A7%9E%EC%B6%9C-%EC%88%98-%EC%9E%88%EC%9D%84%EA%B9%8C",
 ];
 
-export const AllContents = [...PersonalProjects, ...TeamProjects];
+export const Careers = [
+  "https://ming2ki2.notion.site/7853eb06f3d74ff6ae13f7f6de1fb5e6?pvs=4",
+  "https://www.notion.so/ming2ki2/29c4876296a94ea3abbfa4b1a7ece9f3?pvs=4",
+  "https://ming2ki2.notion.site/Error-Boundary-ac4a18b53bad4e10bed9ef7bb2e40e4b?pvs=4",
+  "https://ming2ki2.notion.site/35f2f105eebd4a4b9e4067c7169d969b?pvs=4",
+  "https://ming2ki2.notion.site/443acd2f39e04e4caf53de198a721bb9?pvs=4",
+  "https://ming2ki2.notion.site/infinite-scroll-0784629f062546ddadd8881240b029b6?pvs=4",
+];
+
+export const AllContents = [...Careers, ...PersonalProjects, ...TeamProjects];
 
 export const resumeURL =
   "https://drive.google.com/file/d/1nl0gRaZ8nYoNvJJ7a-yrhsOk70spSGmr/view";

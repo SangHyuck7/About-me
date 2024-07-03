@@ -15,6 +15,7 @@ import {
   TeamProjects,
   AllContents,
   resumeURL,
+  Careers,
 } from "./data/resumeURL";
 
 function SearchCard({
@@ -162,6 +163,19 @@ function SearchCard({
                   );
                 } else if (word === "(링크)" && typeTitle === "TeamProjects") {
                   const url = TeamProjects[linkIndex++];
+
+                  return (
+                    <a
+                      key={wordIndex}
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {word}
+                    </a>
+                  );
+                } else if (word === "(링크)" && typeTitle === "Careers") {
+                  const url = Careers[linkIndex++];
 
                   return (
                     <a
