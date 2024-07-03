@@ -28,4 +28,4 @@ export const Careers = [
 export const AllContents = [...Careers, ...PersonalProjects, ...TeamProjects];
 
 export const resumeURL =
-  "https://drive.google.com/file/d/1nl0gRaZ8nYoNvJJ7a-yrhsOk70spSGmr/view";
+  "https://drive.google.com/file/d/1nl0gRaZ8nYoNvJJ7a-yrhsOk70spSGmr/view?usp=sharing";
