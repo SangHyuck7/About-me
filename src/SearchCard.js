@@ -66,6 +66,7 @@ function SearchCard({
 
       return () => clearTimeout(timer);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [typedText, resumeText]);
 
   useEffect(() => {
@@ -76,6 +77,7 @@ function SearchCard({
     if (typedText.length === resumeText.length && typedText.length) {
       handleSetIsStop();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [typedText, resumeText, handleSetIsStop]);
 
   useEffect(() => {
