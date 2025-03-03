@@ -28,7 +28,7 @@ export const Careers = [
 export const AllContents = [...Careers, ...PersonalProjects, ...TeamProjects];
 
 export const resumeURL =
-  "https://drive.google.com/file/d/1V5m1iNdrRaLvo5WlMrHexiR5Vv_4k3SE/view";
+  "https://drive.google.com/file/d/15nc8JT42En-wabQmTh_pYycoNLpq3uS1/view?usp=sharing";
 
 export const workExperience =
   "https://ming2ki2.notion.site/Work-Experience-35822e69e9984fb093fb5c4dbda5e23d";
